@@ -1,0 +1,15 @@
+{
+  "name": "symlink-or-copy",
+  "description": "Symlink files or directories, falling back to copying on Windows",
+  "version": "0.0.0",
+  "author": "Jo Liss <joliss42@gmail.com>",
+  "main": "index.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/broccolijs/node-symlink-or-copy"
+  },
+  "dependencies": {
+    "copy-dereference": "^1.0.0"
+  }
+}
