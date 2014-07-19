@@ -26,11 +26,12 @@ function symlinkOrCopySync (srcPath, destPath) {
       srcPath = fs.realpathSync(srcPath)
     } else if (srcPath[0] !== '/') {
       // Resolve relative paths.
-      // Note: On Linux and Mac, process.cwd() never contains a symlink, due
-      // to the way getcwd is implemented. As a result, it's correct to use
-      // string concatenation in this code path instead of the slower
-      // path.resolve(). (It seems unnecessary in principle that
-      // path.resolve() is slower. Does anybody want to send a patch to Node?)
+      // Note: On Mac and Linux (unlike Windows), process.cwd() never contains
+      // symlink components, due to the way getcwd is implemented. As a
+      // result, it's correct to use naive string concatenation in this code
+      // path instead of the slower path.resolve(). (It seems unnecessary in
+      // principle that path.resolve() is slower. Does anybody want to send a
+      // patch to Node?)
       srcPath = process.cwd() + '/' + srcPath
     }
 
