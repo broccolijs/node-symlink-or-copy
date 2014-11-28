@@ -11,5 +11,11 @@
   },
   "dependencies": {
     "copy-dereference": "^1.0.0"
+  },
+  "scripts": {
+    "test": "mocha tests/"
+  },
+  "devDependencies": {
+    "mocha": "^1.21.4"
   }
 }
