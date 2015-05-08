@@ -10,6 +10,7 @@
     "url": "https://github.com/broccolijs/node-symlink-or-copy"
   },
   "dependencies": {
+    "can-symlink": "0.0.1",
     "copy-dereference": "^1.0.0"
   },
   "scripts": {
