@@ -7,7 +7,7 @@ var isWindows = process.platform === 'win32'
 var options = {
   isWindows: isWindows,
   copyDereferenceSync: copyDereferenceSync,
-  canSymlink: testCanSymlink(),
+  canSymlink: isWindows ? testCanSymlink() : true,
   fs: fs
 }
 
