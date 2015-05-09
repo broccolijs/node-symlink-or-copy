@@ -1,43 +1,14 @@
 var fs = require('fs')
-var tmpdir = require('os').tmpdir();
-var path = require('path')
 var copyDereferenceSync = require('copy-dereference').sync
-
+var testCanSymlink = require('can-symlink');
 var spawn = require('child_process').spawn
 var isWindows = process.platform === 'win32'
 // These can be overridden for testing
 var options = {
   isWindows: isWindows,
   copyDereferenceSync: copyDereferenceSync,
-  canSymlink: testCanSymlink(),
+  canSymlink: isWindows ? testCanSymlink() : true,
   fs: fs
-}
-
-function testCanSymlink () {
-  // We can't use options here because this function gets called before
-  // its defined
-  if (isWindows === false) { return true; }
-
-  var canLinkSrc  = path.join(tmpdir, "canLinkSrc.tmp")
-  var canLinkDest = path.join(tmpdir, "canLinkDest.tmp")
-
-  try {
-    fs.writeFileSync(canLinkSrc, '');
-  } catch (e) {
-    return false
-  }
-
-  try {
-    fs.symlinkSync(canLinkSrc, canLinkDest)
-  } catch (e) {
-    fs.unlinkSync(canLinkSrc)
-    return false
-  }
-
-  fs.unlinkSync(canLinkSrc)
-  fs.unlinkSync(canLinkDest)
-
-  return true
 }
 
 module.exports = symlinkOrCopy;
