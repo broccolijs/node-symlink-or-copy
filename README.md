@@ -1,5 +1,8 @@
 # node-symlink-or-copy
 
+[![Build Status](https://travis-ci.org/broccolijs/node-symlink-or-copy.svg?branch=master)](https://travis-ci.org/broccolijs/node-symlink-or-copy)
+[![Build status](https://ci.appveyor.com/api/projects/status/rilxgmo21j3qth3v/branch/master?svg=true)](https://ci.appveyor.com/project/joliss/node-symlink-or-copy/branch/master)
+
 Symlink a file or directory to another place. Fall back to copying on Windows.
 Made for use with Broccoli plugins, for "do what I mean" behavior.
 
