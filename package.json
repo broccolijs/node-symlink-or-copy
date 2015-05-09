@@ -16,6 +16,6 @@
     "test": "mocha tests/"
   },
   "devDependencies": {
-    "mocha": "^1.21.4"
+    "mocha": "^2.2.4"
   }
 }
