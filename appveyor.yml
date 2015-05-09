@@ -15,5 +15,4 @@ install:
 build: off
 
 test_script:
-  - ps: 'npm test'
   - cmd: 'npm test'
