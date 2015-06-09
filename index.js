@@ -3,7 +3,6 @@ var tmpdir = require('os').tmpdir();
 var path = require('path')
 var copyDereferenceSync = require('copy-dereference').sync
 
-var spawn = require('child_process').spawn
 var isWindows = process.platform === 'win32'
 // These can be overridden for testing
 var options = {
