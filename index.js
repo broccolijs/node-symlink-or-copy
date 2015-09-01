@@ -67,7 +67,7 @@ function symlink(srcPath, destPath) {
     // because it doesn't use the standard library's `realpath`:
     // https://github.com/joyent/node/issues/7902
     // Can someone please send a patch to Node? :)
-    srcPath = options.fs.realpathSync(srcPath)
+     srcPath = options.fs.readlinkSync(srcPath)
   } else if (srcPath[0] !== '/') {
     // Resolve relative paths.
     // Note: On Mac and Linux (unlike Windows), process.cwd() never contains
@@ -83,7 +83,7 @@ function symlink(srcPath, destPath) {
 
 function symlinkWindows(srcPath, destPath) {
   if (options.canSymlink) {
-    srcPath = options.fs.realpathSync(srcPath)
+    srcPath = options.fs.readlinkSync(srcPath)
     var lstat = options.fs.lstatSync(srcPath)
     var isDir = lstat.isDirectory()
     options.fs.symlinkSync(srcPath, destPath, isDir ? 'dir' : 'file')
