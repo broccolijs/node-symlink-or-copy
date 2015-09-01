@@ -34,7 +34,7 @@ describe('node-symlink-or-copy', function() {
             }
           }
         },
-        realpathSync: function() {count++},
+        readlinkSync: function() {count++},
         symlinkSync: function() {count++;}
       },
       canSymlink: true
@@ -61,7 +61,7 @@ describe('testing mode', function() {
             }
           }
         },
-        realpathSync: function() {count++},
+        readlinkSync: function() {count++},
         symlinkSync: function() {count++;}
       }
     });
