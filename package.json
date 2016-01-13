@@ -15,5 +15,9 @@
   },
   "devDependencies": {
     "mocha": "^2.2.4"
+  },
+  "dependencies": {
+    "fs-extra": "^0.28.0",
+    "mktemp": "^0.4.0"
   }
 }
