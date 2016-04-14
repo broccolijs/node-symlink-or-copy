@@ -60,12 +60,11 @@ dereferenced before symlinking, to avoid runaway symlink indirection.
 
 ## Notes
 
-* Symlinks could technically work on Windows, but they require special rights.
-There are also junctions, but it's not clear whether they are useful. We might
-want to be smarter about using symlinks on Windows when we can, but at the
-moment we opt for the simplest solution (always copying), even though it
-sacrifices performance on Windows.
+* Symlinks technically work on Windows, but they require special rights. For
+  users with those rights, symlinks are used, but when not available, a
+  combination of junctions and copying is used to mimic the behavior somewhat
+  performantly.
 
-* There intentionally isn't an asynchronous version. It's not clear that we
-need or want one. Before sending a patch to add an async version, please share
-your use case on the issue tracker.
+* There intentionally isn't an asynchronoukks version. It's not clear that we
+  need or want one. Before sending a patch to add an async version, please
+  share your use case on the issue tracker.
