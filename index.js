@@ -1,13 +1,11 @@
 var fs = require('fs')
 var tmpdir = require('os').tmpdir();
 var path = require('path')
-var copyDereferenceSync = require('copy-dereference').sync
 
 var isWindows = process.platform === 'win32'
 // These can be overridden for testing
 var options = {
   isWindows: isWindows,
-  copyDereferenceSync: copyDereferenceSync,
   canSymlink: testCanSymlink(),
   fs: fs
 }
@@ -82,12 +80,17 @@ function symlink(srcPath, destPath) {
 }
 
 function symlinkWindows(srcPath, destPath) {
+  var stat = options.fs.statSync(srcPath)
+  var isDir = stat.isDirectory()
+
   if (options.canSymlink) {
     srcPath = options.fs.realpathSync(srcPath)
-    var lstat = options.fs.lstatSync(srcPath)
-    var isDir = lstat.isDirectory()
     options.fs.symlinkSync(srcPath, destPath, isDir ? 'dir' : 'file')
+  } else if (isDir) {
+    srcPath = options.fs.realpathSync(srcPath)
+    options.fs.symlinkSync(srcPath, destPath, 'junction');
   } else {
-    options.copyDereferenceSync(srcPath, destPath)
+    options.fs.writeFileSync(destPath, options.fs.readFileSync(srcPath), { flag: 'wx', mode: stat.mode })
+    options.fs.utimesSync(destPath, stat.atime, stat.mtime)
   }
 }

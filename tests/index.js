@@ -6,24 +6,94 @@ describe('node-symlink-or-copy', function() {
     symLinkOrCopy.setOptions({}); // make sure we don't mix options between tests
   });
 
-  it('windows falls back to copy', function() {
+  it('windows falls back to junction for dir', function() {
     var count = 0;
+    var lsStatSyncCount = 0;
+    var isDirectoryCount = 0;
     symLinkOrCopy.setOptions({
       isWindows: true,
       copyDereferenceSync: function() {
         count++;
       },
-      canSymLink: false
+      canSymLink: false,
+      fs: {
+        statSync: function() {
+          lsStatSyncCount++;
+          return {
+            isSymbolicLink: function() {
+              return true;
+            },
+            isDirectory: function() {
+              isDirectoryCount++;
+              return true;
+            }
+          }
+        },
+        realpathSync: function() {count++},
+        symlinkSync: function() {count++;}
+      }
     });
-    symLinkOrCopy.sync();
-    assert.equal(count, 1);
+    symLinkOrCopy.sync('foo', 'bar');
+    assert.equal(count, 2);
+    assert.equal(lsStatSyncCount, 1);
+    assert.equal(isDirectoryCount, 1);
+  });
+
+
+  it('windows falls back to copy for file', function() {
+    var count = 0
+    var lsStatSyncCount = 0
+    var isDirectoryCount = 0
+    var readFileSyncCount = 0
+    var writeFileSyncCount = 0
+    var utimesSyncCount = 0
+    symLinkOrCopy.setOptions({
+      isWindows: true,
+      copyDereferenceSync: function() {
+        count++
+      },
+      canSymLink: false,
+      fs: {
+        statSync: function() {
+          lsStatSyncCount++
+            return {
+              isSymbolicLink: function() {
+                return true
+              },
+              isDirectory: function() {
+                isDirectoryCount++
+                  return false
+              }
+            };
+        },
+        readFileSync: function() {
+          readFileSyncCount++
+            return 'foo';
+        },
+        writeFileSync: function() {
+          writeFileSyncCount++
+            return 'foo';
+        },
+        realpathSync: function() {count++},
+        symlinkSync: function() {count++},
+        utimesSync: function() {utimesSyncCount++}
+      }
+    });
+
+    symLinkOrCopy.sync('foo', 'bar');
+    assert.equal(count, 0);
+    assert.equal(lsStatSyncCount, 1);
+    assert.equal(isDirectoryCount, 1);
+    assert.equal(writeFileSyncCount, 1);
+    assert.equal(readFileSyncCount, 1);
+    assert.equal(utimesSyncCount, 1);
   });
 
   it('windows symlinks when has permission', function() {
     var count = 0;
     symLinkOrCopy.setOptions({
       fs: {
-        lstatSync: function() {
+        statSync: function() {
           return {
             isSymbolicLink: function() {
               count++;
@@ -37,10 +107,11 @@ describe('node-symlink-or-copy', function() {
         realpathSync: function() {count++},
         symlinkSync: function() {count++;}
       },
-      canSymlink: true
+      canSymlink: true,
+      isWindows: true
     });
     symLinkOrCopy.sync();
-    assert.equal(count, 3);
+    assert.equal(count, 2);
   })
 });
 
