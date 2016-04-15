@@ -80,17 +80,24 @@ function symlink(srcPath, destPath) {
 }
 
 function symlinkWindows(srcPath, destPath) {
-  var stat = options.fs.statSync(srcPath)
+  var stat = options.fs.lstatSync(srcPath)
   var isDir = stat.isDirectory()
+  var wasResolved = false;
+
+  if (stat.isSymbolicLink()) {
+    src = options.fs.realpathSync(srcPath);
+    isDir = options.fs.lstatSync(srcPath).isDirectory();
+    wasResolved = true;
+  }
 
   if (options.canSymlink) {
-    srcPath = options.fs.realpathSync(srcPath)
-    options.fs.symlinkSync(srcPath, destPath, isDir ? 'dir' : 'file')
-  } else if (isDir) {
-    srcPath = options.fs.realpathSync(srcPath)
-    options.fs.symlinkSync(srcPath, destPath, 'junction');
+    options.fs.symlinkSync(wasResolved ? srcPath : path.resolve(srcPath), destPath, isDir ? 'dir' : 'file')
   } else {
-    options.fs.writeFileSync(destPath, options.fs.readFileSync(srcPath), { flag: 'wx', mode: stat.mode })
-    options.fs.utimesSync(destPath, stat.atime, stat.mtime)
+    if (isDir) {
+      options.fs.symlinkSync(wasResolved ? srcPath : path.resolve(srcPath), destPath, 'junction');
+    } else {
+      options.fs.writeFileSync(destPath, options.fs.readFileSync(srcPath), { flag: 'wx', mode: stat.mode })
+      options.fs.utimesSync(destPath, stat.atime, stat.mtime)
+    }
   }
 }
