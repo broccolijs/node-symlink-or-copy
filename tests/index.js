@@ -8,7 +8,7 @@ describe('node-symlink-or-copy', function() {
 
   it('windows falls back to junction for dir', function() {
     var count = 0;
-    var lsStatSyncCount = 0;
+    var lstatSyncCount = 0;
     var isDirectoryCount = 0;
     symLinkOrCopy.setOptions({
       isWindows: true,
@@ -17,8 +17,8 @@ describe('node-symlink-or-copy', function() {
       },
       canSymLink: false,
       fs: {
-        statSync: function() {
-          lsStatSyncCount++;
+       lstatSync: function() {
+         lstatSyncCount++;
           return {
             isSymbolicLink: function() {
               return true;
@@ -35,14 +35,14 @@ describe('node-symlink-or-copy', function() {
     });
     symLinkOrCopy.sync('foo', 'bar');
     assert.equal(count, 2);
-    assert.equal(lsStatSyncCount, 1);
-    assert.equal(isDirectoryCount, 1);
+    assert.equal(lstatSyncCount, 2);
+    assert.equal(isDirectoryCount, 2);
   });
 
 
   it('windows falls back to copy for file', function() {
     var count = 0
-    var lsStatSyncCount = 0
+    var lstatSyncCount = 0
     var isDirectoryCount = 0
     var readFileSyncCount = 0
     var writeFileSyncCount = 0
@@ -54,8 +54,8 @@ describe('node-symlink-or-copy', function() {
       },
       canSymLink: false,
       fs: {
-        statSync: function() {
-          lsStatSyncCount++
+       lstatSync: function() {
+         lstatSyncCount++
             return {
               isSymbolicLink: function() {
                 return true
@@ -81,9 +81,9 @@ describe('node-symlink-or-copy', function() {
     });
 
     symLinkOrCopy.sync('foo', 'bar');
-    assert.equal(count, 0);
-    assert.equal(lsStatSyncCount, 1);
-    assert.equal(isDirectoryCount, 1);
+    assert.equal(count, 1);
+    assert.equal(lstatSyncCount, 2);
+    assert.equal(isDirectoryCount, 2);
     assert.equal(writeFileSyncCount, 1);
     assert.equal(readFileSyncCount, 1);
     assert.equal(utimesSyncCount, 1);
@@ -93,7 +93,7 @@ describe('node-symlink-or-copy', function() {
     var count = 0;
     symLinkOrCopy.setOptions({
       fs: {
-        statSync: function() {
+       lstatSync: function() {
           return {
             isSymbolicLink: function() {
               count++;
@@ -111,7 +111,7 @@ describe('node-symlink-or-copy', function() {
       isWindows: true
     });
     symLinkOrCopy.sync();
-    assert.equal(count, 2);
+    assert.equal(count, 3);
   })
 });
 
