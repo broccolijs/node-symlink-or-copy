@@ -90,11 +90,17 @@ function symlinkWindows(srcPath, destPath) {
     wasResolved = true;
   }
 
+  // Instruct Win32 to suspend path parsing by prefixing the path with a \\?\.
+  // Fix for https://github.com/broccolijs/broccoli-merge-trees/issues/42
+  var WINDOWS_PREFIX = "\\\\?\\";
+  srcPath = WINDOWS_PREFIX + (wasResolved ? srcPath : path.resolve(srcPath));
+  destPath = WINDOWS_PREFIX + path.resolve(path.normalize(destPath));
+
   if (options.canSymlink) {
-    options.fs.symlinkSync(wasResolved ? srcPath : path.resolve(srcPath), destPath, isDir ? 'dir' : 'file')
+    options.fs.symlinkSync(srcPath, destPath, isDir ? 'dir' : 'file');
   } else {
     if (isDir) {
-      options.fs.symlinkSync(wasResolved ? srcPath : path.resolve(srcPath), destPath, 'junction');
+      options.fs.symlinkSync(srcPath, destPath, 'junction');
     } else {
       options.fs.writeFileSync(destPath, options.fs.readFileSync(srcPath), { flag: 'wx', mode: stat.mode })
       options.fs.utimesSync(destPath, stat.atime, stat.mtime)

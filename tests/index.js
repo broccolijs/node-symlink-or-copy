@@ -110,7 +110,7 @@ describe('node-symlink-or-copy', function() {
       canSymlink: true,
       isWindows: true
     });
-    symLinkOrCopy.sync();
+    symLinkOrCopy.sync('foo', 'bar');
     assert.equal(count, 3);
   })
 });
