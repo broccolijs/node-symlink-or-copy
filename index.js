@@ -80,7 +80,7 @@ function symlink(srcPath, destPath) {
 }
 
 function symlinkWindows(srcPath, destPath) {
-  var stat = options.fs.statSync(srcPath)
+  var stat = options.fs.lstatSync(srcPath)
   var isDir = stat.isDirectory()
   var wasResolved = false;
 
