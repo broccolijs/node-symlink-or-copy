@@ -54,7 +54,7 @@ describe('node-symlink-or-copy', function() {
       },
       canSymLink: false,
       fs: {
-       lstatSync: function() {
+       statSync: function() {
          statSyncCount++
             return {
               isSymbolicLink: function() {
@@ -93,7 +93,7 @@ describe('node-symlink-or-copy', function() {
     var count = 0;
     symLinkOrCopy.setOptions({
       fs: {
-       lstatSync: function() {
+       statSync: function() {
           return {
             isSymbolicLink: function() {
               count++;
@@ -121,7 +121,7 @@ describe('testing mode', function() {
     symLinkOrCopy.setOptions({
       canSymlink: true,
       fs: {
-        lstatSync: function() {
+        statSync: function() {
           return {
             isSymbolicLink: function() {
               count++;
