@@ -121,7 +121,7 @@ describe('testing mode', function() {
     symLinkOrCopy.setOptions({
       canSymlink: true,
       fs: {
-        statSync: function() {
+        lstatSync: function() {
           return {
             isSymbolicLink: function() {
               count++;
