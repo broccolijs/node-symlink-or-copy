@@ -80,13 +80,13 @@ function symlink(srcPath, destPath) {
 }
 
 function symlinkWindows(srcPath, destPath) {
-  var stat = options.fs.lstatSync(srcPath)
+  var stat = options.fs.statSync(srcPath)
   var isDir = stat.isDirectory()
   var wasResolved = false;
 
   if (stat.isSymbolicLink()) {
     src = options.fs.realpathSync(srcPath);
-    isDir = options.fs.lstatSync(srcPath).isDirectory();
+    isDir = options.fs.statSync(srcPath).isDirectory();
     wasResolved = true;
   }
 
