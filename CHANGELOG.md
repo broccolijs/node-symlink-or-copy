@@ -1,5 +1,9 @@
 # master
 
+# 1.1.2
+
+* [BUGFIX}] fix typo, causing grief on windows
+
 # 1.1.1
 
 * [BUGFIX] use realpath before creating a junction to ensure we always point to
