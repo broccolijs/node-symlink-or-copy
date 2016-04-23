@@ -85,7 +85,7 @@ function symlinkWindows(srcPath, destPath) {
   var wasResolved = false;
 
   if (stat.isSymbolicLink()) {
-    src = options.fs.realpathSync(srcPath);
+    srcPath = options.fs.realpathSync(srcPath);
     isDir = options.fs.lstatSync(srcPath).isDirectory();
     wasResolved = true;
   }
