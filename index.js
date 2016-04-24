@@ -79,6 +79,10 @@ function symlink(srcPath, destPath) {
   options.fs.symlinkSync(srcPath, destPath);
 }
 
+// Instruct Win32 to suspend path parsing by prefixing the path with a \\?\.
+// Fix for https://github.com/broccolijs/broccoli-merge-trees/issues/42
+var WINDOWS_PREFIX = "\\\\?\\";
+
 function symlinkWindows(srcPath, destPath) {
   var stat = options.fs.lstatSync(srcPath)
   var isDir = stat.isDirectory()
@@ -90,9 +94,6 @@ function symlinkWindows(srcPath, destPath) {
     wasResolved = true;
   }
 
-  // Instruct Win32 to suspend path parsing by prefixing the path with a \\?\.
-  // Fix for https://github.com/broccolijs/broccoli-merge-trees/issues/42
-  var WINDOWS_PREFIX = "\\\\?\\";
   srcPath = WINDOWS_PREFIX + (wasResolved ? srcPath : path.resolve(srcPath));
   destPath = WINDOWS_PREFIX + path.resolve(path.normalize(destPath));
 
