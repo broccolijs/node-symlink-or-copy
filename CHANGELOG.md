@@ -2,11 +2,11 @@
 
 # 1.1.3
 
-* [BUGFIX}] Instruct Win32 to suspend path parsing by prefixing the path with a \\?\.
+* [BUGFIX] Instruct Win32 to suspend path parsing by prefixing the path with a \\?\.
 
 # 1.1.2
 
-* [BUGFIX}] fix typo, causing grief on windows
+* [BUGFIX] fix typo, causing grief on windows
 
 # 1.1.1
 
