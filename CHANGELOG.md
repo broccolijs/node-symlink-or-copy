@@ -1,5 +1,8 @@
 # master
 
+* Mitigate race, sometimes the tempfile already exists, ensure it has been
+  removed before trying to write it.
+
 # 1.1.3
 
 * [BUGFIX] Instruct Win32 to suspend path parsing by prefixing the path with a \\?\.
