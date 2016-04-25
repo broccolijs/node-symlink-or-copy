@@ -1,5 +1,7 @@
 # master
 
+# 1.1.4
+
 * Mitigate race, sometimes the tempfile already exists, ensure it has been
   removed before trying to write it.
 
