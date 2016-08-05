@@ -1,5 +1,5 @@
-var fs = require('fs-extra')
-var mktemp = require('mktemp');
+var fs = require('fs')
+var tmpdir = require('os').tmpdir();
 var path = require('path')
 
 var isWindows = process.platform === 'win32'
@@ -15,12 +15,8 @@ function testCanSymlink () {
   // its defined
   if (isWindows === false) { return true; }
 
-  fs.mkdirSync('tmp');
-
-  var tmpdir = mktemp.createDirSync('tmp/XXXXX.tmp');
-
-  var canLinkSrc  = tmpdir + '/canLinkSrc.tmp';
-  var canLinkDest = tmpdir + '/canLinkDest.tmp';
+  var canLinkSrc  = path.join(tmpdir, "canLinkSrc.tmp")
+  var canLinkDest = path.join(tmpdir, "canLinkDest.tmp")
 
   try {
     fs.writeFileSync(canLinkSrc, '');
@@ -35,7 +31,8 @@ function testCanSymlink () {
     return false
   }
 
-  fs.remove(tmpdir);
+  fs.unlinkSync(canLinkSrc)
+  fs.unlinkSync(canLinkDest)
 
   return true
 }
