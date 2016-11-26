@@ -115,6 +115,79 @@ describe('node-symlink-or-copy', function() {
   })
 });
 
+describe('WSL issues', function() {
+
+  it('drops trailing / on directories, because WSL doesn\'t handle it', function() {
+    var count = 0;
+    symLinkOrCopy.setOptions({
+      canSymlink: true,
+      fs: {
+        lstatSync: function(srcPath) {
+          assert.equal(srcPath, 'foo')
+          return {
+            isSymbolicLink: function() {
+              count++;
+              return true;
+            },
+            isDirectory: function() {
+              return true;
+            }
+          }
+        },
+        realpathSync: function(srcPath) {
+          assert.equal(srcPath, 'foo')
+          count++
+          return 'bar';
+        },
+        symlinkSync: function(srcPath) {
+          count++;
+          assert.equal(srcPath, 'bar')
+        }
+      }
+    });
+
+    assert.equal(count, 0);
+    symLinkOrCopy.sync('foo/', 'bar/');
+    assert.equal(count, 3);
+  });
+
+  it('drops extra / in paths, because WSL doesn\'t handle it', function() {
+    var count = 0;
+    symLinkOrCopy.setOptions({
+      canSymlink: true,
+      fs: {
+        lstatSync: function(srcPath) {
+          assert.equal(srcPath, 'foo/bar/baz')
+          return {
+            isSymbolicLink: function() {
+              count++;
+              return true;
+            },
+            isDirectory: function() {
+              return true;
+            }
+          }
+        },
+        realpathSync: function(srcPath) {
+          assert.equal(srcPath, 'foo/bar/baz')
+          count++
+          return 'foo/bar/baz';
+        },
+        symlinkSync: function(srcPath) {
+          count++;
+          assert.equal(srcPath, 'foo/bar/baz')
+        }
+      }
+    });
+
+    assert.equal(count, 0);
+    symLinkOrCopy.sync('foo//bar//baz', 'bar/');
+    assert.equal(count, 3);
+  });
+
+
+});
+
 describe('testing mode', function() {
   it('allows fs to be mocked', function() {
     var count = 0;
