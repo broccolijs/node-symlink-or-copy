@@ -1,5 +1,9 @@
 # master
 
+# 1.1.7
+
+* seems like the last release had an issue
+
 # 1.1.6
 
 * add work-around for fininky Windows Subsystem Linux path + symlink issues
