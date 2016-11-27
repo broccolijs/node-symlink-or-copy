@@ -1,5 +1,9 @@
 # master
 
+# 1.1.8
+
+* expose `canSymlink` boolean via `require('symlink-or-copy').canSymlink`
+
 # 1.1.7
 
 * seems like the last release had an issue
