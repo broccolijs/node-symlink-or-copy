@@ -113,6 +113,16 @@ describe('node-symlink-or-copy', function() {
     symLinkOrCopy.sync('foo', 'bar');
     assert.equal(count, 3);
   })
+
+  it('exposes options.canSymlink via the canSymlink property', function() {
+    assert.equal(symLinkOrCopy.canSymlink, false, 'undefined is coerced to false');
+
+    symLinkOrCopy.setOptions({ canSymlink: true});
+    assert.equal(symLinkOrCopy.canSymlink, true, 'returns true');
+
+    symLinkOrCopy.setOptions({ canSymlink: false});
+    assert.equal(symLinkOrCopy.canSymlink, false, 'returns false');
+  });
 });
 
 describe('WSL issues', function() {

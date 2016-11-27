@@ -66,6 +66,12 @@ function symlinkOrCopySync (srcPath, destPath) {
   }
 }
 
+Object.defineProperty(module.exports, 'canSymlink', {
+  get: function() {
+    return !!options.canSymlink;
+  }
+});
+
 function symlink(_srcPath, _destPath) {
   var srcPath = cleanup(_srcPath);
   var destPath = cleanup(_destPath);
