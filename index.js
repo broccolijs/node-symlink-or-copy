@@ -47,6 +47,16 @@ function setOptions(newOptions) {
   options = newOptions
 }
 
+function cleanup(path) {
+  if (typeof path !== 'string' ) { return }
+  // WSL (Windows Subsystem Linux) has issues with:
+  //  * https://github.com/ember-cli/ember-cli/issues/6338
+  //  * trailing `/` on symlinked directories
+  //  * extra/duplicate `/` mid-path
+  //  issue: https://github.com/Microsoft/BashOnWindows/issues/1421
+  return path.replace(/\/$/,'').replace(/\/\//g, '/');
+}
+
 module.exports.sync = symlinkOrCopySync
 function symlinkOrCopySync (srcPath, destPath) {
   if (options.isWindows) {
@@ -56,7 +66,10 @@ function symlinkOrCopySync (srcPath, destPath) {
   }
 }
 
-function symlink(srcPath, destPath) {
+function symlink(_srcPath, _destPath) {
+  var srcPath = cleanup(_srcPath);
+  var destPath = cleanup(_destPath);
+
   var lstat = options.fs.lstatSync(srcPath)
   if (lstat.isSymbolicLink()) {
     // When we encounter symlinks, follow them. This prevents indirection
