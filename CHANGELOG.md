@@ -1,5 +1,13 @@
 # master
 
+# 1.1.6
+
+* add work-around for fininky Windows Subsystem Linux path + symlink issues
+
+# 1.1.5
+
+* only package files required for usage
+
 # 1.1.4
 
 * Mitigate race, sometimes the tempfile already exists, ensure it has been
