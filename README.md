@@ -65,6 +65,6 @@ dereferenced before symlinking, to avoid runaway symlink indirection.
   combination of junctions and copying is used to mimic the behavior somewhat
   performantly.
 
-* There intentionally isn't an asynchronoukks version. It's not clear that we
+* There intentionally isn't an asynchronous version. It's not clear that we
   need or want one. Before sending a patch to add an async version, please
   share your use case on the issue tracker.
