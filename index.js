@@ -116,6 +116,10 @@ function symlinkWindows(srcPath, destPath) {
   srcPath = WINDOWS_PREFIX + (wasResolved ? srcPath : path.resolve(srcPath));
   destPath = WINDOWS_PREFIX + path.resolve(path.normalize(destPath));
 
+  if(!options.fs.existsSync(path.dirname(destPath))){
+    options.fs.mkdirSync(path.dirname(destPath));
+  }
+
   if (options.canSymlink) {
     options.fs.symlinkSync(srcPath, destPath, isDir ? 'dir' : 'file');
   } else {
