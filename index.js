@@ -18,6 +18,10 @@ function testCanSymlink () {
   var canLinkSrc  = path.join(tmpdir, "canLinkSrc.tmp")
   var canLinkDest = path.join(tmpdir, "canLinkDest.tmp")
 
+  try { 
+    fs.unlinkSync(canLinkDest)
+  } catch (e) { }
+
   try {
     fs.writeFileSync(canLinkSrc, '');
   } catch (e) {
