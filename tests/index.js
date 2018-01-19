@@ -3,7 +3,6 @@ var symLinkOrCopy = require('..');
 var tmpdir = require('os').tmpdir();
 var path = require('path');
 var fs = require('fs')
-var process = require('process');
 
 describe('node-symlink-or-copy', function() {
   beforeEach(function() {
