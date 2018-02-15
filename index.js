@@ -4,11 +4,12 @@ var path = require('path')
 
 var isWindows = process.platform === 'win32'
 // These can be overridden for testing
-var options = {
+var defaultOptions = {
   isWindows: isWindows,
   canSymlink: testCanSymlink(),
   fs: fs
 }
+var options = defaultOptions;
 
 function testCanSymlink () {
   // We can't use options here because this function gets called before
@@ -34,6 +35,24 @@ function testCanSymlink () {
   fs.unlinkSync(canLinkSrc)
   fs.unlinkSync(canLinkDest)
 
+  // Test symlinking a directory. For some reason, sometimes Windows allows
+  // symlinking a file but not symlinking a directory...
+  try {
+    fs.mkdirSync(canLinkSrc);
+  } catch (e) {
+    return false
+  }
+
+  try {
+    fs.symlinkSync(canLinkSrc, canLinkDest, 'dir')
+  } catch (e) {
+    fs.rmdirSync(canLinkSrc)
+    return false
+  }
+
+  fs.rmdirSync(canLinkSrc)
+  fs.rmdirSync(canLinkDest)
+
   return true
 }
 
@@ -44,7 +63,8 @@ function symlinkOrCopy () {
 
 module.exports.setOptions = setOptions
 function setOptions(newOptions) {
-  options = newOptions
+
+  options = newOptions || defaultOptions;
 }
 
 function cleanup(path) {

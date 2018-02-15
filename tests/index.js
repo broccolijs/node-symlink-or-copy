@@ -1,5 +1,8 @@
 var assert = require('assert');
 var symLinkOrCopy = require('..');
+var tmpdir = require('os').tmpdir();
+var path = require('path');
+var fs = require('fs')
 
 describe('node-symlink-or-copy', function() {
   beforeEach(function() {
@@ -38,6 +41,28 @@ describe('node-symlink-or-copy', function() {
     assert.equal(lstatSyncCount, 2);
     assert.equal(isDirectoryCount, 2);
   });
+
+  it('it can symlink a directory', function() {
+    var sourcePath = path.join(tmpdir, 'symlinkTestEx');
+    var destinationPath = path.join(tmpdir, 'symlinkTestDest');
+    symLinkOrCopy.setOptions(null); // use the real implentation here
+
+    try {
+      fs.rmdirSync(sourcePath);
+    } catch (error) {
+      if(error.code != 'ENOENT'){
+        throw error;
+      }
+    }
+    try {
+      fs.rmdirSync(destinationPath);
+    } catch (error) {}
+    fs.mkdirSync(sourcePath);
+
+    symLinkOrCopy.sync(sourcePath, destinationPath);
+    assert.ok(fs.existsSync(destinationPath), 'destination path should exist');
+    
+  })
 
 
   it('windows falls back to copy for file', function() {
