@@ -4,11 +4,12 @@ var fs = require('fs');
 var tmpdir = require('os').tmpdir();
 var path = require('path');
 
-var isWindows = process.platform === 'win32';
+var canSymlink = testCanSymlink();
 // These can be overridden for testing
 var defaultOptions = {
-  isWindows: isWindows,
-  canSymlink: testCanSymlink(),
+  isWindows: process.platform === 'win32',
+  canSymlinkFile: canSymlink.file,
+  canSymlinkDirectory: canSymlink.directory,
   fs: fs
 };
 var options = defaultOptions;
@@ -16,7 +17,13 @@ var options = defaultOptions;
 function testCanSymlink () {
   // We can't use options here because this function gets called before
   // its defined
-  if (isWindows === false) { return true; }
+
+  var result = {
+    files: false,
+    directories: false
+  };
+
+  if (process.platform !== 'win32') { return result; }
 
   var canLinkSrc  = path.join(tmpdir, "canLinkSrc.tmp");
   var canLinkDest = path.join(tmpdir, "canLinkDest.tmp");
@@ -24,14 +31,13 @@ function testCanSymlink () {
   try {
     fs.writeFileSync(canLinkSrc, '');
   } catch (e) {
-    return false;
+    return result;
   }
 
   try {
     fs.symlinkSync(canLinkSrc, canLinkDest);
   } catch (e) {
-    fs.unlinkSync(canLinkSrc);
-    return false
+    result.files = false;
   }
 
   fs.unlinkSync(canLinkSrc);
@@ -42,20 +48,22 @@ function testCanSymlink () {
   try {
     fs.mkdirSync(canLinkSrc);
   } catch (e) {
-    return false;
+    result.directories = false;
+    return result;
   }
 
   try {
     fs.symlinkSync(canLinkSrc, canLinkDest, 'dir');
   } catch (e) {
-    fs.rmdirSync(canLinkSrc);
-    return false;
+    fs.rmdirSync(canLinkSrc)
+    result.directories = false;
   }
 
-  fs.rmdirSync(canLinkSrc);
-  fs.rmdirSync(canLinkDest);
+  fs.rmdirSync(canLinkSrc)
+  fs.rmdirSync(canLinkDest)
+  result.directories = true;
 
-  return true;
+  return result;
 }
 
 module.exports = symlinkOrCopy;
@@ -63,8 +71,7 @@ function symlinkOrCopy () {
   throw new Error("This function does not exist. Use require('symlink-or-copy').sync");
 }
 
-module.exports.setOptions = setOptions;
-function setOptions(newOptions) {
+module.exports._setOptions = function setOptions(newOptions) {
   options = newOptions || defaultOptions;
 }
 
@@ -89,7 +96,19 @@ function symlinkOrCopySync (srcPath, destPath) {
 
 Object.defineProperty(module.exports, 'canSymlink', {
   get: function() {
-    return !!options.canSymlink;
+    return !!(options.canSymlinkFile && options.canSymlinkDirectory);
+  }
+});
+
+Object.defineProperty(module.exports, 'canSymlinkFile', {
+  get: function() {
+    return !!options.canSymlinkFile;
+  }
+});
+
+Object.defineProperty(module.exports, 'canSymlinkDirectory', {
+  get: function() {
+    return !!options.canSymlinkDirectory;
   }
 });
 
@@ -137,11 +156,15 @@ function symlinkWindows(srcPath, destPath) {
   srcPath = WINDOWS_PREFIX + (wasResolved ? srcPath : path.resolve(srcPath));
   destPath = WINDOWS_PREFIX + path.resolve(path.normalize(destPath));
 
-  if (options.canSymlink) {
-    options.fs.symlinkSync(srcPath, destPath, isDir ? 'dir' : 'file');
-  } else {
-    if (isDir) {
+  if (isDir) {
+    if (options.canSymlinkDirectory) {
+      options.fs.symlinkSync(srcPath, destPath, 'dir');
+    } else {
       options.fs.symlinkSync(srcPath, destPath, 'junction');
+    }
+  } else {
+    if (options.canSymlinkFile) {
+      options.fs.symlinkSync(srcPath, destPath, 'file');
     } else {
       options.fs.writeFileSync(destPath, options.fs.readFileSync(srcPath), { flag: 'wx', mode: stat.mode });
       options.fs.utimesSync(destPath, stat.atime, stat.mtime);
