@@ -122,6 +122,58 @@ describe('symlink-or-copy', function() {
       assert.equal(utimesSyncCount, 1);
     });
 
+    it('windows falls back to copyFileSync if available for file', function() {
+      var count = 0
+      var lstatSyncCount = 0
+      var isDirectoryCount = 0
+      var readFileSyncCount = 0
+      var writeFileSyncCount = 0
+      var utimesSyncCount = 0
+      var copyFileSync = 0
+      symLinkOrCopy.setOptions({
+        isWindows: true,
+        canSymLink: false,
+        fs: {
+          lstatSync: function() {
+            lstatSyncCount++;
+            return {
+              isSymbolicLink: function() {
+                return true;
+              },
+              isDirectory: function() {
+                isDirectoryCount++;
+                return false;
+              }
+            };
+          },
+          readFileSync: function() {
+            readFileSyncCount++;
+            return 'foo';
+          },
+          writeFileSync: function() {
+            writeFileSyncCount++;
+            return 'foo';
+          },
+          copyFileSync: function() {
+            copyFileSync++;
+            return 'foo';
+          },
+          realpathSync: function() {count++;},
+          symlinkSync: function() {count++;},
+          utimesSync: function() {utimesSyncCount++;}
+        }
+      });
+
+      symLinkOrCopy.sync('foo', 'bar');
+      assert.equal(count, 1);
+      assert.equal(lstatSyncCount, 2);
+      assert.equal(isDirectoryCount, 2);
+      assert.equal(writeFileSyncCount, 0);
+      assert.equal(copyFileSync, 1);
+      assert.equal(readFileSyncCount, 0);
+      assert.equal(utimesSyncCount, 1);
+    });
+
     it('windows symlinks when has permission', function() {
       var count = 0;
       symLinkOrCopy.setOptions({
