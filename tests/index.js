@@ -41,7 +41,7 @@ describe('symlink-or-copy', function() {
               }
             }
           },
-          realpathSync: function() {count++},
+          realpathSync: function() {count++;},
           symlinkSync: function() {count++;}
         }
       });
@@ -59,10 +59,11 @@ describe('symlink-or-copy', function() {
       try {
         fs.rmdirSync(sourcePath);
       } catch (error) {
-        if(error.code != 'ENOENT'){
+        if (error.code != 'ENOENT') {
           throw error;
         }
       }
+
       try {
         fs.rmdirSync(destinationPath);
       } catch (error) {}
@@ -70,45 +71,45 @@ describe('symlink-or-copy', function() {
 
       symLinkOrCopy.sync(sourcePath, destinationPath);
       assert.ok(fs.existsSync(destinationPath), 'destination path should exist');
-    })
+    });
 
     it('windows falls back to copy for file', function() {
-      var count = 0
-      var lstatSyncCount = 0
-      var isDirectoryCount = 0
-      var readFileSyncCount = 0
-      var writeFileSyncCount = 0
-      var utimesSyncCount = 0
+      var count = 0;
+      var lstatSyncCount = 0;
+      var isDirectoryCount = 0;
+      var readFileSyncCount = 0;
+      var writeFileSyncCount = 0;
+      var utimesSyncCount = 0;
       symLinkOrCopy.setOptions({
         isWindows: true,
         copyDereferenceSync: function() {
-          count++
+          count++;
         },
         canSymLink: false,
         fs: {
           lstatSync: function() {
-            lstatSyncCount++
+            lstatSyncCount++;
             return {
               isSymbolicLink: function() {
-                return true
+                return true;
               },
               isDirectory: function() {
-                isDirectoryCount++
-                return false
+                isDirectoryCount++;
+                return false;
               }
             };
           },
           readFileSync: function() {
-            readFileSyncCount++
+            readFileSyncCount++;
             return 'foo';
           },
           writeFileSync: function() {
-            writeFileSyncCount++
+            writeFileSyncCount++;
             return 'foo';
           },
-          realpathSync: function() {count++},
-          symlinkSync: function() {count++},
-          utimesSync: function() {utimesSyncCount++}
+          realpathSync: function() {count++;},
+          symlinkSync: function() {count++;},
+          utimesSync: function() {utimesSyncCount++;}
         }
       });
 
@@ -136,7 +137,7 @@ describe('symlink-or-copy', function() {
               }
             }
           },
-          realpathSync: function() {count++},
+          realpathSync: function() {count++;},
           symlinkSync: function() {count++;}
         },
         canSymlink: true,
@@ -176,13 +177,13 @@ describe('symlink-or-copy', function() {
             }
           },
           realpathSync: function(srcPath) {
-            assert.equal(srcPath, 'foo')
-            count++
+            assert.equal(srcPath, 'foo');
+            count++;
             return 'bar';
           },
           symlinkSync: function(srcPath) {
             count++;
-            assert.equal(srcPath, 'bar')
+            assert.equal(srcPath, 'bar');
           }
         }
       });
@@ -198,7 +199,7 @@ describe('symlink-or-copy', function() {
         canSymlink: true,
         fs: {
           lstatSync: function(srcPath) {
-            assert.equal(srcPath, 'foo/bar/baz')
+            assert.equal(srcPath, 'foo/bar/baz');
             return {
               isSymbolicLink: function() {
                 count++;
@@ -210,13 +211,13 @@ describe('symlink-or-copy', function() {
             }
           },
           realpathSync: function(srcPath) {
-            assert.equal(srcPath, 'foo/bar/baz')
-            count++
+            assert.equal(srcPath, 'foo/bar/baz');
+            count++;
             return 'foo/bar/baz';
           },
           symlinkSync: function(srcPath) {
             count++;
-            assert.equal(srcPath, 'foo/bar/baz')
+            assert.equal(srcPath, 'foo/bar/baz');
           }
         }
       });
@@ -244,7 +245,7 @@ describe('symlink-or-copy', function() {
               }
             }
           },
-          realpathSync: function() {count++},
+          realpathSync: function() {count++;},
           symlinkSync: function() {count++;}
         }
       });
