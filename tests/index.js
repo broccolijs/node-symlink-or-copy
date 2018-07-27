@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('assert');
 var symLinkOrCopy = require('..');
 var tmpdir = require('os').tmpdir() + '/symlink-or-copy';
@@ -156,7 +158,6 @@ describe('symlink-or-copy', function() {
   });
 
   describe('WSL issues', function() {
-
     it('drops trailing / on directories, because WSL doesn\'t handle it', function() {
       var count = 0;
       symLinkOrCopy.setOptions({
@@ -224,8 +225,6 @@ describe('symlink-or-copy', function() {
       symLinkOrCopy.sync('foo//bar//baz', 'bar/');
       assert.equal(count, 3);
     });
-
-
   });
 
   describe('testing mode', function() {
@@ -255,5 +254,4 @@ describe('symlink-or-copy', function() {
       assert.equal(count, 3);
     });
   });
-
 });

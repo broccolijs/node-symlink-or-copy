@@ -1,3 +1,5 @@
+'use strict';
+
 var fs = require('fs')
 var tmpdir = require('os').tmpdir();
 var path = require('path')
