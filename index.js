@@ -8,8 +8,8 @@ var canSymlink = testCanSymlink();
 // These can be overridden for testing
 var defaultOptions = {
   isWindows: process.platform === 'win32',
-  canSymlinkFile: canSymlink.file,
-  canSymlinkDirectory: canSymlink.directory,
+  canSymlinkFile: canSymlink.files,
+  canSymlinkDirectory: canSymlink.directories,
   fs: fs
 };
 var options = defaultOptions;
@@ -36,12 +36,17 @@ function testCanSymlink () {
 
   try {
     fs.symlinkSync(canLinkSrc, canLinkDest);
+    result.files = true;
   } catch (e) {
     result.files = false;
   }
 
   fs.unlinkSync(canLinkSrc);
-  fs.unlinkSync(canLinkDest);
+  try {
+    fs.unlinkSync(canLinkDest);
+  } catch (e) {
+    // In case the link failed
+  }
 
   // Test symlinking a directory. For some reason, sometimes Windows allows
   // symlinking a file but not symlinking a directory...
@@ -54,14 +59,13 @@ function testCanSymlink () {
 
   try {
     fs.symlinkSync(canLinkSrc, canLinkDest, 'dir');
+    fs.rmdirSync(canLinkSrc)
+    fs.rmdirSync(canLinkDest)
+    result.directories = true;
   } catch (e) {
     fs.rmdirSync(canLinkSrc)
     result.directories = false;
   }
-
-  fs.rmdirSync(canLinkSrc)
-  fs.rmdirSync(canLinkDest)
-  result.directories = true;
 
   return result;
 }
