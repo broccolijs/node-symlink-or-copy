@@ -1,5 +1,12 @@
 # master
 
+# 1.2.0
+
+* modernize readme
+* add new nodes to CI
+* ensure symlink/junction/copy works on files/folders on windows regardless of if files or folders are symlinkable
+* doc/readme cleanup
+
 # 1.1.8
 
 * expose `canSymlink` boolean via `require('symlink-or-copy').canSymlink`
