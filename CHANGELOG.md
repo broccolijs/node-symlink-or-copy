@@ -1,6 +1,6 @@
 # master
 
-# 1.2.0
+# 1.3.0
 
 * modernize readme
 * add new nodes to CI
