@@ -17,7 +17,7 @@
     "test:debug": "mocha debug tests"
   },
   "devDependencies": {
-    "mocha": "^2.2.4",
-    "rimraf": "^2.6.2"
+    "mocha": "^6.2.2",
+    "rimraf": "^3.0.0"
   }
 }

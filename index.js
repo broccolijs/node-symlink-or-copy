@@ -59,11 +59,11 @@ function testCanSymlink () {
 
   try {
     fs.symlinkSync(canLinkSrc, canLinkDest, 'dir');
-    fs.rmdirSync(canLinkSrc)
-    fs.rmdirSync(canLinkDest)
+    fs.rmdirSync(canLinkSrc);
+    fs.rmdirSync(canLinkDest);
     result.directories = true;
   } catch (e) {
-    fs.rmdirSync(canLinkSrc)
+    fs.rmdirSync(canLinkSrc);
     result.directories = false;
   }
 
