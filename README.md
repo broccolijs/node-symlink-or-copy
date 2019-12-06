@@ -15,7 +15,7 @@ npm install --save symlink-or-copy
 ## Example
 
 ```js
-var symlinkOrCopySync = require('symlink-or-copy').sync;
+const symlinkOrCopySync = require('symlink-or-copy').sync;
 
 symlinkOrCopySync('src_dir/some_file.txt', 'dest_dir/some_file.txt');
 symlinkOrCopySync('src_dir/some_dir', 'dest_dir/some_dir');
@@ -24,7 +24,7 @@ symlinkOrCopySync('src_dir/some_dir', 'dest_dir/some_dir');
 ## Description
 
 ```js
-symlinkOrCopySync(srcPath, destPath)
+symlinkOrCopySync(srcPath, destPath);
 ```
 
 Create a symlink at `destPath` pointing to `srcPath`.
