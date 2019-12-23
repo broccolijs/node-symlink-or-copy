@@ -41,8 +41,8 @@ function testCanSymlink () {
     result.files = false;
   }
 
-  fs.unlinkSync(canLinkSrc);
   try {
+    fs.unlinkSync(canLinkSrc);
     fs.unlinkSync(canLinkDest);
   } catch (e) {
     // In case the link failed
@@ -63,7 +63,11 @@ function testCanSymlink () {
     fs.rmdirSync(canLinkDest);
     result.directories = true;
   } catch (e) {
-    fs.rmdirSync(canLinkSrc);
+    try {
+     fs.rmdirSync(canLinkSrc); 
+    } catch(e) {
+      // In case rmdir failed
+    }
     result.directories = false;
   }
 
