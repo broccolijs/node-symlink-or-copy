@@ -1,5 +1,9 @@
 # master
 
+# 1.3.1
+
+* Ensure symlink support detection cannot fail when cleaning up
+
 # 1.3.0
 
 * modernize readme
