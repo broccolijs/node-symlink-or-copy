@@ -150,6 +150,13 @@ function symlink(_srcPath, _destPath) {
 // Fix for https://github.com/broccolijs/broccoli-merge-trees/issues/42
 var WINDOWS_PREFIX = "\\\\?\\";
 
+function copyFileSync(srcPath, destPath, stat) {
+  options.fs.writeFileSync(destPath, options.fs.readFileSync(srcPath), {
+    flag: 'wx',
+    mode: stat.mode
+  });
+}
+
 function symlinkWindows(srcPath, destPath) {
   var stat = options.fs.lstatSync(srcPath);
   var isDir = stat.isDirectory();
@@ -174,7 +181,11 @@ function symlinkWindows(srcPath, destPath) {
     if (options.canSymlinkFile) {
       options.fs.symlinkSync(srcPath, destPath, 'file');
     } else {
-      options.fs.writeFileSync(destPath, options.fs.readFileSync(srcPath), { flag: 'wx', mode: stat.mode });
+      if (options.fs.copyFileSync) {
+        options.fs.copyFileSync(srcPath, destPath);
+      } else {
+        copyFileSync(srcPath, destPath, stat);
+      }
       options.fs.utimesSync(destPath, stat.atime, stat.mtime);
     }
   }
